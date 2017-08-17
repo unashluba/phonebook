@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+    <title>SPVanilla</title>
+
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+
+    <!-- @exclude -->
+    <link rel="stylesheet/less" href="../styles/base/common.less">
+    <link rel="stylesheet/less" href="../styles/pages/home.less">
+    <script src="../libs/less/dist/less-1.5.0.js"></script>
+    <!-- @endexclude -->
+
+    <!-- @ifdef RELEASE -->
+    <!-- @include ../assets/includes/home/release-head.html -->
+    <!-- @endif -->
+
+    <!-- @ifdef DEBUG -->
+    <!-- @include ../assets/includes/home/debug-head.html -->
+    <!-- @endif -->
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript">
+        'article aside footer header nav section'.replace(/\w+/g,function(n){document.createElement(n)});
+    </script>
+    <![endif]-->
+    <!--[if lt IE 7]>
+    <script src="../assets/browser/warning.js"></script>
+    <![endif]-->
+
+    <script>
+        document.write('<style rel="stylesheet/css">#allowJavascript {display: none;}</style>');
+    </script>
+</head>
+<body>
+    <section>
+        <article>
+            <h3>Lyuba!!!</h3>
+            <ul>
+                <li><b>assets</b> - contains static files (fonts, images, documents, swf etc.)</li>
+                <li>
+                    <b>dist</b>
+                    <ul>
+                        <li><b>src</b> - contains full source code without third-party settings (like bower or grunt)</li>
+                        <li><b>debug</b> - contains the website with LESS files compiled to CSS</li>
+                        <li><b>release</b> - contains compiled and minified version of the project, ready to upload</li>
+                    </ul>
+                </li>
+                <li><b>features</b> - contains features for cucumber tests
+                    <ul>
+                        <li><b>step_definitions</b> - contains steps definitions for cucumber tests</li>
+                        <li><b>support</b> - contains support files which let you setup the environment in which steps will be run</li>
+                    </ul>
+                </li>
+                <li><b>libs</b> - contains third-party components, managed by Bower</li>
+                <li><b>scripts</b> - contains all custom Javascript code</li>
+                <li>
+                    <b>styles</b>
+                    <ul>
+                        <li><b>base</b> - contains common styles for the whole application</li>
+                        <li><b>controls</b> - contains styles for reusable components</li>
+                        <li><b>pages</b> - contains styles for specific pages</li>
+                        <li><b>utils</b> - contains useful mixins and utilities</li>
+                    </ul>
+                </li>
+            </ul>
+        </article>
+    </section>
+
+    <!-- @include ../controls/javascript.html -->
+
+    <!-- @ifndef RELEASE -->
+    <!-- <script src="../scripts/anything.js"></script> -->
+    <!-- @endif -->
+
+    <!-- @ifdef RELEASE -->
+    <!-- @include ../assets/includes/home/release-foot.html -->
+    <!-- @endif -->
+</body>
+</html>
