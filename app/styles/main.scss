@@ -1,6 +1,7 @@
 body
 {
   background-color: rebeccapurple;
+  color: cadetblue;
 
   section
   {
@@ -8,8 +9,15 @@ body
     color: darkcyan;
   }
 
+  h1
+  {
+    color: azure;
+    font-weight: 900;
+  }
+
   h3
   {
+    font-size: 56px;
     span
     {
       color: azure;
