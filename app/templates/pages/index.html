@@ -8,12 +8,28 @@
 
     <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700&subset=latin,cyrillic" rel="stylesheet" type="text/css">
     <link rel="stylesheet" media="all" href="styles/main.css">
-    <link rel="stylesheet" href="../font-awesome/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="../../../font-awesome/css/font-awesome.min.css">-->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">-->
 
 </head>
 <body>
     <div class="wrapper">
-        <input type="text" class="name-filter" placeholder="filter by name" name="filter">
+        <div class="filter-wrap">
+            <input type="text" class="name-filter" placeholder="Filter by name" name="filter">
+        </div>
+
+        <div class="contacts-list">
+            <div class="contacts-list--item">
+                <div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>
+                <div class="contact">
+                    <p class="name">Adrian Alder</p>
+                    <span class="mail">mail@gmail.com</span>
+                </div>
+                <div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                <div class="close"><i class="fa fa-times" aria-hidden="true"></i></div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -128,9 +128,9 @@ gulp.task('serve', ['watch'], function() {
     gulp.src(distPath)
         .pipe(webserver({
             livereload: false,
-            port: 3000,
+            port: 8080,
             directoryListing: distPath,
-            open: 'http://localhost:3000/index.html'
+            open: 'http://localhost:8080/index.html'
         }));
 });
 /*serve the site task with changing watching */

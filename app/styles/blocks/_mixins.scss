@@ -4,3 +4,24 @@
   -ms-border-radius: $radius;
   border-radius: $radius;
 }
+
+@mixin box-sizing($value) {
+  -webkit-box-sizing: $value;
+  -moz-box-sizing: $value;
+  -ms-box-sizing: $value;
+  box-sizing: $value;
+}
+
+@mixin transform($value) {
+  -moz-transform: ($value);
+  -ms-transform: ($value);
+  -webkit-transform: ($value);
+  -o-transform: ($value);
+  transform: ($value);
+}
+
+@mixin after {
+  content: "";
+  display: block;
+  clear: both;
+}
