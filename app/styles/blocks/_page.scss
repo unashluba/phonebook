@@ -1,0 +1,9 @@
+.wrapper {
+  background-color: $background;
+  padding: 15px;
+
+  .name-filter {
+    @include border-radius(20px);
+    width: 100%;
+  }
+}

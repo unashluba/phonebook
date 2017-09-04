@@ -1,27 +1,4 @@
-body
-{
-  background-color: rebeccapurple;
-  color: cadetblue;
+@import "blocks/mixins";
 
-  section
-  {
-    background-color: aquamarine;
-    color: darkcyan;
-  }
-
-  h1
-  {
-    color: azure;
-    font-weight: 900;
-  }
-
-  h3
-  {
-    font-size: 56px;
-    span
-    {
-      color: azure;
-    }
-  }
-}
-
+@import "blocks/devices";
+@import "blocks/colours";
