@@ -12,6 +12,12 @@
   box-sizing: $value;
 }
 
+@mixin box-shadow($shadow) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
 @mixin transform($value) {
   -moz-transform: ($value);
   -ms-transform: ($value);
