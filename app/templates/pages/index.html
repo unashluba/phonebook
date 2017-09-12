@@ -12,7 +12,7 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!--<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">-->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet">
-
+    <script src="../../scripts/main.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -26,6 +26,7 @@
                 <div class="contact">
                     <p class="name">Adrian Alder</p>
                     <span class="mail">mail@gmail.com</span>
+                    <span class="phone">375293338073</span>
                 </div>
                 <div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>
                 <div class="close"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>
@@ -33,7 +34,27 @@
         </div>
         <div class="buttons">
             <button>Countries</button>
-            <button>Add New</button>
+            <button id="add-contact">Add New</button>
+        </div>
+        <div class="add-panel">
+            <form class="add-panel_form">
+                <label for="name">Name</label>
+                <input type="text" id="name" class="form-field">
+
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" class="form-field">
+
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-field">
+
+                <label for="note">Note</label>
+                <textarea id="note" class="form-field"></textarea>
+            </form>
+
+            <div class="buttons">
+                <button id="cancel">Cancel</button>
+                <button id="add">Add</button>
+            </div>
         </div>
     </div>
 </body>
