@@ -22,13 +22,17 @@ window.onload = function(){
     //Event Listeners
     addContactButton.addEventListener('click', function () {
         addFormPanel.style.display = 'block';
+        contactsList.className += ' hidden';
     });
 
     cancelButton.addEventListener('click', function () {
         addFormPanel.style.display = 'none';
+        contactsList.classList.remove('hidden');
     });
 
     addButton.addEventListener('click', addToBook);
+
+    contactsList.addEventListener('click', removeItem);
 
     function jsonStructure(name, phone, email, note){
         this.name = name;
@@ -38,7 +42,6 @@ window.onload = function(){
     }
     
     function addToBook(){
-        // TODO develop validation
         let filledFull = name.value!=='' && phone.value!=='' && email.value!=='' && note.value!=='';
 
         if(filledFull){
@@ -48,9 +51,22 @@ window.onload = function(){
             localStorage['phonebook'] = JSON.stringify(phoneBook);
             //Hide the form
             addFormPanel.style.display = 'none';
+            //Updating and displaying all records in the phone book
+            showContacts();
             //Clear the form
             clearForm();
-            //Updating and displaying all records in the phone book
+        }
+    }
+    
+    function removeItem(e) {
+        if(e.target.classList.contains('delete-btn')){
+            let removingID = e.target.getAttribute('data-id');
+
+            e.target.closest('.contacts-list_item').className +=  ' hiding';
+
+            // Remove the JSOn entry from the array with the index num = remID;
+            phoneBook.splice(removingID, 1);
+            localStorage['phonebook'] = JSON.stringify(phoneBook);
         }
     }
 
@@ -70,9 +86,19 @@ window.onload = function(){
             phoneBook = JSON.parse(localStorage['phonebook']);
             contactsList.innerHTML = '';
             for(let n in phoneBook){
-            let str = '<div class="contacts-list_item">';
-                str += '<div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>'
+                let str = '<div class="contacts-list_item">';
+                    str += '<div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>';
+                    str += '<div class="contact"><p class="name">' + phoneBook[n].name + '</p>';
+                    str += '<p class="mail">' + phoneBook[n].email + '</p>';
+                    str += '<p class="phone">' + phoneBook[n].phone + '</p></div>';
+                    str += '<div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>';
+                    str += '<div class="delete"><i class="fa fa-plus-circle delete-btn" data-id="' + n + '" aria-hidden="true"></i></div>';
+                    str += '</div>';
+                    contactsList.innerHTML += str;
+                    contactsList.classList.remove('hidden');
             }
         }
     }
+
+    showContacts();
 };

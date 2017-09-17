@@ -26,6 +26,13 @@
   transform: ($value);
 }
 
+@mixin transition($value) {
+  -webkit-transition: ($value);
+  -moz-transition: ($value);
+  -o-transition: ($value);
+  transition: ($value);
+}
+
 @mixin after {
   content: "";
   display: block;
