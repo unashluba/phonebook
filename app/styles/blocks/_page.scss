@@ -4,7 +4,8 @@
 }
 
 input,
-button {
+button,
+textarea {
   outline: none;
   border:none;
 }
@@ -171,6 +172,11 @@ button {
         width: 100%;
         border: none;
         margin-bottom: 30px;
+      }
+
+      .error-message {
+        display: none;
+        color: chocolate;
       }
     }
   }

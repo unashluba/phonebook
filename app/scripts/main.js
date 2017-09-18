@@ -42,9 +42,11 @@ window.onload = function(){
         this.email = email;
         this.note = note;
     }
-    
+
     function addToBook(){
-        let filledFull = firstName.value!=='' && lastName.value!=='' && phone.value!=='' && email.value!=='' && note.value!=='';
+        let phoneNumber = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/,
+            filledFull = firstName.value!=='' && lastName.value!=='' && phone.value!=='' && phone.value.match(phoneNumber),
+            errorMessage = document.querySelector('.error-message');
 
         if(filledFull){
             //Add fields values to the array & localstorage
@@ -53,10 +55,15 @@ window.onload = function(){
             localStorage['phonebook'] = JSON.stringify(phoneBook);
             //Hide the form
             addFormPanel.style.display = 'none';
+            //Hide error message
+            errorMessage.style.display = 'none';
             //Updating and displaying all records in the phone book
             showContacts();
             //Clear the form
             clearForm();
+        }
+        else {
+            errorMessage.style.display = 'block';
         }
     }
     
