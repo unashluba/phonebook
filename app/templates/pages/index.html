@@ -38,22 +38,25 @@
         </div>
         <div class="add-panel">
             <form class="add-panel_form">
-                <label for="name">Name</label>
-                <input type="text" id="name" class="form-field">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" class="form-field" required>
+
+                <label for="last-name">First Name</label>
+                <input type="text" id="last-name" class="form-field" required>
 
                 <label for="phone">Phone</label>
-                <input type="tel" id="phone" class="form-field">
+                <input type="tel" id="phone" class="form-field" required>
 
                 <label for="email">Email</label>
-                <input type="email" id="email" class="form-field">
+                <input type="email" id="email" class="form-field" required>
 
                 <label for="note">Note</label>
-                <textarea id="note" class="form-field"></textarea>
+                <textarea id="note" class="form-field" required></textarea>
             </form>
 
             <div class="buttons">
                 <button id="cancel">Cancel</button>
-                <button id="add">Add</button>
+                <button type="submit" id="add">Add</button>
             </div>
         </div>
     </div>

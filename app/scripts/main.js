@@ -8,7 +8,8 @@ window.onload = function(){
     //document.getElementByClassName('add-panel')[0]
 
     //Form Fields
-    let name = document.getElementById('name'),
+    let firstName = document.getElementById('first-name'),
+        lastName = document.getElementById('last-name'),
         phone = document.getElementById('phone'),
         email = document.getElementById('email'),
         note = document.getElementById('note');
@@ -34,19 +35,20 @@ window.onload = function(){
 
     contactsList.addEventListener('click', removeItem);
 
-    function jsonStructure(name, phone, email, note){
-        this.name = name;
+    function jsonStructure(firstName, lastName, phone, email, note){
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.note = note;
     }
     
     function addToBook(){
-        let filledFull = name.value!=='' && phone.value!=='' && email.value!=='' && note.value!=='';
+        let filledFull = firstName.value!=='' && lastName.value!=='' && phone.value!=='' && email.value!=='' && note.value!=='';
 
         if(filledFull){
             //Add fields values to the array & localstorage
-            let obj = new jsonStructure(name.value,phone.value,email.value,note.value);
+            let obj = new jsonStructure(firstName.value,lastName.value,phone.value,email.value,note.value);
             phoneBook.push(obj);
             localStorage['phonebook'] = JSON.stringify(phoneBook);
             //Hide the form
@@ -88,7 +90,7 @@ window.onload = function(){
             for(let n in phoneBook){
                 let str = '<div class="contacts-list_item">';
                     str += '<div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>';
-                    str += '<div class="contact"><p class="name">' + phoneBook[n].name + '</p>';
+                    str += '<div class="contact"><p class="name">' + phoneBook[n].firstName + ' ' + phoneBook[n].lastName + '</p>';
                     str += '<p class="mail">' + phoneBook[n].email + '</p>';
                     str += '<p class="phone">' + phoneBook[n].phone + '</p></div>';
                     str += '<div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>';
