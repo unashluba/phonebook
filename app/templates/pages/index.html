@@ -12,7 +12,8 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!--<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">-->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet">
-    <script src="../../scripts/main.js"></script>
+    <script type="text/javascript" src="scripts/main.js"></script>
+    <script type="text/javascript" src="scripts/plugins.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -20,18 +21,23 @@
             <input type="text" placeholder="Filter by name" name="filter" class="name-filter" >
         </div>
 
-        <div class="contacts-list">
-            <!--<div class="contacts-list_item">-->
-                <!--<div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>-->
-                <!--<div class="contact">-->
-                    <!--<p class="name">Adrian Alder</p>-->
-                    <!--<p class="mail">mail@gmail.com</p>-->
-                    <!--<p class="phone">375293338073</p>-->
-                <!--</div>-->
-                <!--<div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>-->
-                <!--<div class="delete"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>-->
-            <!--</div>-->
-        </div>
+        <script id="mustacheTempalte" type="text/template">
+            <div class="contacts-list_item">
+                {{#shows}}
+                    <div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>
+                        <div class="contact">
+                            <p class="name">{{name}}</p>
+                            <p class="mail">{{email}}</p>
+                            <p class="phone">{{phone}}</p>
+                        </div>
+                    <div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                    <div class="delete"><i class="fa fa-plus-circle delete-btn" {{dataId}}='{{id}}' aria-hidden="true"></i></div>
+                {{/shows}}
+            </div>
+        </script>
+
+        <div id="contacts-list" class="contacts-list"></div>
+
         <div class="buttons">
             <button>Countries</button>
             <button id="add-contact">Add New</button>
@@ -41,7 +47,7 @@
                 <label for="first-name">First Name</label>
                 <input type="text" id="first-name" class="form-field" required>
 
-                <label for="last-name">First Name</label>
+                <label for="last-name">Last Name</label>
                 <input type="text" id="last-name" class="form-field" required>
 
                 <label for="phone">Phone</label>

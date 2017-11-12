@@ -29,8 +29,8 @@ gulp.task('set-production', function() {
 /*scripts build tasks */
 gulp.task('custom-js', function() {
     gulp.src(srcPath + 'scripts/*.js')
-        .pipe(eslint())
-        .pipe(eslint.format())
+        // .pipe(eslint())
+        // .pipe(eslint.format())
         .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']

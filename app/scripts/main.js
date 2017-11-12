@@ -93,18 +93,25 @@ window.onload = function(){
             localStorage['phonebook'] = '[]';
         } else {
             phoneBook = JSON.parse(localStorage['phonebook']);
-            contactsList.innerHTML = '';
+
+            let targetContainer = document.getElementById('contacts-list'),
+                template = document.getElementById('mustacheTempalte').innerHTML;
+
+            targetContainer.innerHTML = '';
+
             for(let n in phoneBook){
-                let str = '<div class="contacts-list_item">';
-                    str += '<div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>';
-                    str += '<div class="contact"><p class="name">' + phoneBook[n].firstName + ' ' + phoneBook[n].lastName + '</p>';
-                    str += '<p class="mail">' + phoneBook[n].email + '</p>';
-                    str += '<p class="phone">' + phoneBook[n].phone + '</p></div>';
-                    str += '<div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>';
-                    str += '<div class="delete"><i class="fa fa-plus-circle delete-btn" data-id="' + n + '" aria-hidden="true"></i></div>';
-                    str += '</div>';
-                    contactsList.innerHTML += str;
-                    contactsList.classList.remove('hidden');
+                let shows = { 'shows' : [
+                    { 'name' : phoneBook[n].firstName + ' ' + phoneBook[n].lastName,
+                        'email' : phoneBook[n].email,
+                        'phone' : phoneBook[n].phone,
+                        'dataId' : 'data-id',
+                        'id' : n
+                    }
+                ] };
+
+                let html = Mustache.render(template, shows);
+                targetContainer.innerHTML += html;
+                contactsList.classList.remove('hidden');
             }
         }
     }
