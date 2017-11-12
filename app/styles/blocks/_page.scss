@@ -54,6 +54,22 @@ textarea {
        background-color: $light-purple;
        margin-bottom: 1px;
 
+       &_details {
+         position: absolute;
+         left: 0;
+         top: 0;
+         z-index: 2;
+         width: 100%;
+         height: 100vh;
+         overflow: hidden;
+         background-color: pink;
+         display: none;
+
+         &.shown {
+           display: block;
+         }
+       }
+
        * {
          opacity: 1;
          @include transition(opacity 0.2s ease-in);

@@ -15,24 +15,25 @@ window.onload = function(){
         note = document.getElementById('note');
 
     //Phone Book Display (Book Items)
-    let contactsList = document.querySelector('.contacts-list');
+    let contactsList = document.getElementById('contacts-list');
 
     //Create Storage Array
     let phoneBook = [];
 
     //Event Listeners
-    addContactButton.addEventListener('click', function () {
+    addContactButton.addEventListener('click', function() {
         addFormPanel.style.display = 'block';
         contactsList.className += ' hidden';
     });
 
-    cancelButton.addEventListener('click', function () {
+    cancelButton.addEventListener('click', function() {
         addFormPanel.style.display = 'none';
         contactsList.classList.remove('hidden');
     });
 
     addButton.addEventListener('click', addToBook);
 
+    contactsList.addEventListener('click', showContactDetails);
     contactsList.addEventListener('click', removeItem);
 
     function jsonStructure(firstName, lastName, phone, email, note){
@@ -66,6 +67,44 @@ window.onload = function(){
             errorMessage.style.display = 'block';
         }
     }
+
+    function showContactDetails(e) {
+
+        let target = e.target,
+            index;
+
+        // цикл двигается вверх от target к родителям до contacts-list_item
+        while (target !== this) {
+            if (target.className == 'contacts-list_item') {
+                // нашли элемент, который нас интересует!
+                details(target);
+                return;
+            }
+            target = target.parentNode;
+            index = target.id;
+        }
+
+        function details() {
+            let detailsContainer = document.getElementById('item-details'),
+                template = document.getElementById('contactsListItemDetails').innerHTML;
+
+            detailsContainer.innerHTML = '';
+
+            let details = { 'details' : [
+                { 'name' : phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
+                    'email' : phoneBook[index].email,
+                    'phone' : phoneBook[index].phone,
+                    'note' : phoneBook[index].note
+                }
+            ] };
+
+            let html = Mustache.render(template, details);
+            detailsContainer.innerHTML += html;
+            detailsContainer.classList.add('shown');
+        }
+    }
+
+
     
     function removeItem(e) {
         if(e.target.classList.contains('delete-btn')){
@@ -95,7 +134,7 @@ window.onload = function(){
             phoneBook = JSON.parse(localStorage['phonebook']);
 
             let targetContainer = document.getElementById('contacts-list'),
-                template = document.getElementById('mustacheTempalte').innerHTML;
+                template = document.getElementById('contactsListItem').innerHTML;
 
             targetContainer.innerHTML = '';
 

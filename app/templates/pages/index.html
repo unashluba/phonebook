@@ -21,9 +21,9 @@
             <input type="text" placeholder="Filter by name" name="filter" class="name-filter" >
         </div>
 
-        <script id="mustacheTempalte" type="text/template">
-            <div class="contacts-list_item">
-                {{#shows}}
+        <script id="contactsListItem" type="text/template">
+            {{#shows}}
+                <div id='{{id}}' class="contacts-list_item">
                     <div class="icon"><i class="fa fa-address-book-o" aria-hidden="true"></i></div>
                         <div class="contact">
                             <p class="name">{{name}}</p>
@@ -32,8 +32,8 @@
                         </div>
                     <div class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></div>
                     <div class="delete"><i class="fa fa-plus-circle delete-btn" {{dataId}}='{{id}}' aria-hidden="true"></i></div>
-                {{/shows}}
-            </div>
+                </div>
+            {{/shows}}
         </script>
 
         <div id="contacts-list" class="contacts-list"></div>
@@ -42,6 +42,7 @@
             <button>Countries</button>
             <button id="add-contact">Add New</button>
         </div>
+
         <div class="add-panel">
             <form class="add-panel_form">
                 <label for="first-name">First Name</label>
@@ -66,6 +67,19 @@
                 <button type="submit" id="add">Add</button>
             </div>
         </div>
+
+        <script id="contactsListItemDetails" type="text/template">
+            {{#details}}
+                <h1>{{name}}</h1>
+                <p>Email</p>
+                <p>{{email}}</p>
+                <p>Phone Number</p>
+                <p>{{phone}}</p>
+                <p>Notes</p>
+                <p>{{note}}</p>
+            {{/details}}
+        </script>
+        <div id="item-details" class="contacts-list_item_details"></div>
     </div>
 </body>
 </html>
