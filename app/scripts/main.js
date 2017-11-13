@@ -3,7 +3,7 @@ window.onload = function(){
 
     let addContactButton = document.getElementById('add-contact'),
         addButton = document.getElementById('add'),
-        cancelButton = document.getElementById('cancel'),
+        cancelAdding = document.getElementById('cancel-add'),
         addFormPanel = document.querySelector('.add-panel');
     //document.getElementByClassName('add-panel')[0]
 
@@ -26,7 +26,7 @@ window.onload = function(){
         contactsList.className += ' hidden';
     });
 
-    cancelButton.addEventListener('click', function() {
+    cancelAdding.addEventListener('click', function() {
         addFormPanel.style.display = 'none';
         contactsList.classList.remove('hidden');
     });
@@ -71,17 +71,20 @@ window.onload = function(){
     function showContactDetails(e) {
 
         let target = e.target,
-            index;
+            index,
+            buttons = target.classList.contains('delete-btn') || target.classList.contains('edit-btn');
 
-        // цикл двигается вверх от target к родителям до contacts-list_item
-        while (target !== this) {
-            if (target.className == 'contacts-list_item') {
-                // нашли элемент, который нас интересует!
-                details(target);
-                return;
+        if (!buttons) {
+            // цикл двигается вверх от target к родителям до contacts-list_item
+            while (target !== this) {
+                if (target.className == 'contacts-list_item') {
+                    // нашли элемент, который нас интересует!
+                    details(target);
+                    return;
+                }
+                target = target.parentNode;
+                index = target.id;
             }
-            target = target.parentNode;
-            index = target.id;
         }
 
         function details() {
@@ -99,13 +102,18 @@ window.onload = function(){
             ] };
 
             let html = Mustache.render(template, details);
+
             detailsContainer.innerHTML += html;
             detailsContainer.classList.add('shown');
+
+            let cancelView = document.getElementById('cancel-view');
+
+            cancelView.onclick = function() {
+                detailsContainer.classList.remove('shown');
+            };
         }
     }
 
-
-    
     function removeItem(e) {
         if(e.target.classList.contains('delete-btn')){
             let removingID = e.target.getAttribute('data-id');
