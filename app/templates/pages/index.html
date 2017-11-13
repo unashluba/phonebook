@@ -35,7 +35,6 @@
                 </div>
             {{/shows}}
         </script>
-
         <div id="contacts-list" class="contacts-list"></div>
 
         <div class="buttons">
@@ -72,9 +71,9 @@
             {{#details}}
                 <h1>{{name}}</h1>
                 <p class="title">Email:</p>
-                <p>{{email}}</p>
+                <a href="mailto:{{email}}">{{email}}</a>
                 <p class="title">Phone Number:</p>
-                <p>{{phone}}</p>
+                <a href="tel:{{phone}}">{{phone}}</a>
                 <p class="title">Notes:</p>
                 <p>{{note}}</p>
             {{/details}}
@@ -84,6 +83,25 @@
             </div>
         </script>
         <div id="item-details" class="contacts-list_item_details"></div>
+
+        <script id="editContact" type="text/template">
+            {{#edit}}
+                <h1>{{name}}</h1>
+                <label for="edit-email" class="title">Email:</label>
+                <input id="edit-email" type="text" value="{{email}}">
+
+                <label for="edit-phone" class="title">Phone No:</label>
+                <input id="edit-phone" type="text" value="{{phone}}">
+
+                <label for="edit-note" class="title">Notes:</label>
+                <textarea id="edit-note" placeholder="{{note}}"></textarea>
+            {{/edit}}
+            <div class="buttons">
+                <button id="cancel-edit">Cancel</button>
+                <button id="edit-contact-button">Edit</button>
+            </div>
+        </script>
+        <div id="edit-contact" class="contacts-list_item_edit"></div>
     </div>
 </body>
 </html>
