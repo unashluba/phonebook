@@ -111,6 +111,37 @@ window.onload = function(){
             cancelView.onclick = function() {
                 detailsContainer.classList.remove('shown');
             };
+
+            //edit
+            let showEditFieldsBtn = document.getElementById('show-edit-fields');
+
+            showEditFieldsBtn.addEventListener('click', showEditFields);
+
+            function showEditFields() {
+                let editContainer = document.getElementById('edit-contact-panel'),
+                    editTemplate = document.getElementById('editContact').innerHTML;
+
+                editContainer.innerHTML = '';
+
+                let edit = { 'edit' : [
+                    { 'name' : phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
+                        'email' : phoneBook[index].email,
+                        'phone' : phoneBook[index].phone,
+                        'note' : phoneBook[index].note
+                    }
+                ] };
+
+                let html = Mustache.render(editTemplate, edit);
+
+                editContainer.innerHTML += html;
+                editContainer.classList.add('shown');
+
+                let cancelEditBtn = document.getElementById('cancel-edit')
+
+                cancelEditBtn.addEventListener('click', function () {
+                    editContainer.classList.remove('shown');
+                });
+            }
         }
     }
 

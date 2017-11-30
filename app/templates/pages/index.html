@@ -67,6 +67,7 @@
             </div>
         </div>
 
+        <!--show details -->
         <script id="contactsListItemDetails" type="text/template">
             {{#details}}
                 <h1>{{name}}</h1>
@@ -79,11 +80,12 @@
             {{/details}}
             <div class="buttons">
                 <button id="cancel-view">Cancel</button>
-                <button>Edit</button>
+                <button id="show-edit-fields">Edit</button>
             </div>
         </script>
         <div id="item-details" class="contacts-list_item_details"></div>
 
+        <!--edit contact fields-->
         <script id="editContact" type="text/template">
             {{#edit}}
                 <h1>{{name}}</h1>
@@ -98,10 +100,10 @@
             {{/edit}}
             <div class="buttons">
                 <button id="cancel-edit">Cancel</button>
-                <button id="edit-contact-button">Edit</button>
+                <button>Edit</button>
             </div>
         </script>
-        <div id="edit-contact" class="contacts-list_item_edit"></div>
+        <div id="edit-contact-panel" class="contacts-list_item_edit"></div>
     </div>
 </body>
 </html>
