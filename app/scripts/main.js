@@ -35,6 +35,7 @@ window.onload = function(){
 
     contactsList.addEventListener('click', showContactDetails);
     contactsList.addEventListener('click', removeItem);
+    contactsList.addEventListener('click', editItem);
 
     function jsonStructure(firstName, lastName, phone, email, note){
         this.firstName = firstName;
@@ -106,42 +107,51 @@ window.onload = function(){
             detailsContainer.innerHTML += html;
             detailsContainer.classList.add('shown');
 
-            let cancelView = document.getElementById('cancel-view');
+            let cancelView = document.getElementById('cancel-view'),
+                showEditFieldsBtn = document.getElementById('show-edit-fields');
 
             cancelView.onclick = function() {
                 detailsContainer.classList.remove('shown');
             };
 
-            //edit
-            let showEditFieldsBtn = document.getElementById('show-edit-fields');
+            showEditFieldsBtn.onclick = function() {
+                edit(index);
+            };
+        }
+    }
 
-            showEditFieldsBtn.addEventListener('click', showEditFields);
 
-            function showEditFields() {
-                let editContainer = document.getElementById('edit-contact-panel'),
-                    editTemplate = document.getElementById('editContact').innerHTML;
+    function edit(item) {
+        let editContainer = document.getElementById('edit-contact-panel'),
+            editTemplate = document.getElementById('editContact').innerHTML;
 
-                editContainer.innerHTML = '';
+            editContainer.innerHTML = '';
 
-                let edit = { 'edit' : [
-                    { 'name' : phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
-                        'email' : phoneBook[index].email,
-                        'phone' : phoneBook[index].phone,
-                        'note' : phoneBook[index].note
-                    }
-                ] };
-
-                let html = Mustache.render(editTemplate, edit);
-
-                editContainer.innerHTML += html;
-                editContainer.classList.add('shown');
-
-                let cancelEditBtn = document.getElementById('cancel-edit')
-
-                cancelEditBtn.addEventListener('click', function () {
-                    editContainer.classList.remove('shown');
-                });
+        let edit = { 'edit' : [
+            { 'name' : phoneBook[item].firstName + ' ' + phoneBook[item].lastName,
+                'email' : phoneBook[item].email,
+                'phone' : phoneBook[item].phone,
+                'note' : phoneBook[item].note
             }
+        ] };
+
+        let html = Mustache.render(editTemplate, edit);
+
+        editContainer.innerHTML += html;
+        editContainer.classList.add('shown');
+
+        let cancelEditBtn = document.getElementById('cancel-edit');
+
+        cancelEditBtn.addEventListener('click', function () {
+            editContainer.classList.remove('shown');
+        });
+    }
+
+    function editItem(e) {
+        if(e.target.classList.contains('edit-btn')){
+            let editID = e.target.getAttribute('data-id');
+
+            edit(editID);
         }
     }
 
