@@ -1,6 +1,5 @@
 window.onload = function(){
     //Buttons
-
     let addContactButton = document.getElementById('add-contact'),
         addButton = document.getElementById('add'),
         cancelAdding = document.getElementById('cancel-add'),
@@ -120,7 +119,6 @@ window.onload = function(){
         }
     }
 
-
     function edit(item) {
         let editContainer = document.getElementById('edit-contact-panel'),
             editTemplate = document.getElementById('editContact').innerHTML;
@@ -128,21 +126,44 @@ window.onload = function(){
             editContainer.innerHTML = '';
 
         let edit = { 'edit' : [
-            { 'name' : phoneBook[item].firstName + ' ' + phoneBook[item].lastName,
-                'email' : phoneBook[item].email,
-                'phone' : phoneBook[item].phone,
-                'note' : phoneBook[item].note
-            }
+            { 'name' : phoneBook[item].firstName + ' ' + phoneBook[item].lastName}
         ] };
 
         let html = Mustache.render(editTemplate, edit);
 
         editContainer.innerHTML += html;
+
+        let editPhone = document.getElementById('edit-phone'),
+            editEmail = document.getElementById('edit-email'),
+            editNote = document.getElementById('edit-note');
+
+        editPhone.value = phoneBook[item].phone;
+        editEmail.value = phoneBook[item].email;
+        editNote.value = phoneBook[item].note;
+
         editContainer.classList.add('shown');
 
-        let cancelEditBtn = document.getElementById('cancel-edit');
+        let cancelEditBtn = document.getElementById('cancel-edit'),
+            updateContactBtn = document.getElementById('update-contact');
 
         cancelEditBtn.addEventListener('click', function () {
+            editContainer.classList.remove('shown');
+        });
+
+        //rewrite values
+        editPhone.addEventListener('input', function() {
+            phoneBook[item].phone = editPhone.value;
+        });
+        editEmail.addEventListener('input', function() {
+            phoneBook[item].email = editEmail.value;
+        });
+        editNote.addEventListener('input', function() {
+            phoneBook[item].note = editNote.value;
+        });
+
+        updateContactBtn.addEventListener('click', function () {
+            localStorage['phonebook'] = JSON.stringify(phoneBook);
+            showContacts();
             editContainer.classList.remove('shown');
         });
     }
