@@ -3,7 +3,9 @@ window.onload = function(){
     let addContactButton = document.getElementById('add-contact'),
         addButton = document.getElementById('add'),
         cancelAdding = document.getElementById('cancel-add'),
-        addFormPanel = document.querySelector('.add-panel');
+        addFormPanel = document.querySelector('.add-panel'),
+        exportBtn = document.getElementById('export'),
+        importBtn = document.getElementById('import');
     //document.getElementByClassName('add-panel')[0]
 
     //Form Fields
@@ -44,6 +46,13 @@ window.onload = function(){
         this.note = note;
     }
 
+    //export
+    function download(text, name, type) {
+        let file = new Blob([text], {type: type});
+        exportBtn.href = URL.createObjectURL(file);
+        exportBtn.download = name;
+    }
+
     function addToBook(){
         let phoneNumber = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/,
             filledFull = firstName.value!=='' && lastName.value!=='' && phone.value!=='' && phone.value.match(phoneNumber),
@@ -58,6 +67,8 @@ window.onload = function(){
             addFormPanel.style.display = 'none';
             //Hide error message
             errorMessage.style.display = 'none';
+            //write to file
+            download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain');
             //Updating and displaying all records in the phone book
             showContacts();
             //Clear the form
@@ -163,6 +174,8 @@ window.onload = function(){
 
         updateContactBtn.addEventListener('click', function () {
             localStorage['phonebook'] = JSON.stringify(phoneBook);
+            //write to file
+            download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain');
             showContacts();
             editContainer.classList.remove('shown');
         });
@@ -185,6 +198,8 @@ window.onload = function(){
             // Remove the JSOn entry from the array with the index num = remID;
             phoneBook.splice(removingID, 1);
             localStorage['phonebook'] = JSON.stringify(phoneBook);
+            //write to file
+            download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain');
         }
     }
 
@@ -224,6 +239,29 @@ window.onload = function(){
             }
         }
     }
+
+    function loadFileAsText(){
+        let uploadInput = document.getElementById('upload'),
+            fileToLoad = uploadInput.files[0];
+
+        let fileReader = new FileReader();
+        fileReader.readAsText(fileToLoad, "UTF-8");
+
+        fileReader.onload = function(fileLoadedEvent){
+            let textFromFileLoaded = fileLoadedEvent.target.result,
+                textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
+            localStorage['phonebook'] = JSON.stringify((phoneBook.concat(textFromFileLoadedJson)));
+            uploadInput.value = '';
+
+            showContacts();
+        };
+    }
+
+    importBtn.addEventListener('click', function () {
+        loadFileAsText();
+    });
+
+    exportBtn.addEventListener('click', download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain'));
 
     showContacts();
 };
