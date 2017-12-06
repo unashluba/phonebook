@@ -5,7 +5,8 @@ window.onload = function(){
         cancelAdding = document.getElementById('cancel-add'),
         addFormPanel = document.querySelector('.add-panel'),
         exportBtn = document.getElementById('export'),
-        importBtn = document.getElementById('import');
+        importBtn = document.getElementById('import'),
+        filterInput = document.getElementById('filter');
     //document.getElementByClassName('add-panel')[0]
 
     //Form Fields
@@ -256,6 +257,26 @@ window.onload = function(){
             showContacts();
         };
     }
+
+    function filter() {
+        let filter = filterInput.value.toUpperCase(),
+            contactItem = contactsList.getElementsByClassName('contacts-list_item'),
+            contactDetails,
+            i;
+
+        for (i = 0; i < contactItem.length; i++) {
+            contactDetails = contactItem[i].getElementsByClassName('contact')[0];
+            if (contactDetails.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                contactItem[i].style.display = '';
+            } else {
+                contactItem[i].style.display = 'none';
+            }
+        }
+    }
+
+    filterInput.addEventListener('onkeyup', function () {
+        filter();
+    });
 
     importBtn.addEventListener('click', function () {
         loadFileAsText();
