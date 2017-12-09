@@ -101,6 +101,15 @@ a {
           margin-bottom: 10px;
           color: $gray;
           padding: 5px 10px;
+
+          &.country-code {
+            width: 20%;
+            margin-right: 3%;
+          }
+
+          &.phone {
+            width: 71%;
+          }
         }
       }
 
@@ -171,7 +180,6 @@ a {
   }
 
   .buttons {
-
     position: absolute;
     bottom: 15px;
     left: 15px;
@@ -223,6 +231,15 @@ a {
         margin-bottom: 15px;
         height: 30px;
         padding: 5px 10px;
+
+        &.country-code {
+          width: 20%;
+          margin-right: 3%;
+        }
+
+        &.phone {
+          width: 71%;
+        }
       }
 
       textarea {
@@ -236,5 +253,9 @@ a {
         color: chocolate;
       }
     }
+  }
+
+  .plus {
+    width: 2%;
   }
 }

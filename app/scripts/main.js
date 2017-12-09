@@ -7,11 +7,11 @@ window.onload = function(){
         exportBtn = document.getElementById('export'),
         importBtn = document.getElementById('import'),
         filterInput = document.getElementById('filter');
-    //document.getElementByClassName('add-panel')[0]
 
     //Form Fields
     let firstName = document.getElementById('first-name'),
         lastName = document.getElementById('last-name'),
+        countryCode = document.getElementById('country-code'),
         phone = document.getElementById('phone'),
         email = document.getElementById('email'),
         note = document.getElementById('note');
@@ -39,9 +39,10 @@ window.onload = function(){
     contactsList.addEventListener('click', removeItem);
     contactsList.addEventListener('click', editItem);
 
-    function jsonStructure(firstName, lastName, phone, email, note){
+    function jsonStructure(firstName, lastName, countryCode, phone, email, note){
         this.firstName = firstName;
         this.lastName = lastName;
+        this.countryCode = countryCode;
         this.phone = phone;
         this.email = email;
         this.note = note;
@@ -56,12 +57,12 @@ window.onload = function(){
 
     function addToBook(){
         let phoneNumber = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/,
-            filledFull = firstName.value!=='' && lastName.value!=='' && phone.value!=='' && phone.value.match(phoneNumber),
+            filledFull = firstName.value!=='' && lastName.value!=='' && countryCode.value!=='' && phone.value!=='' && phone.value.match(phoneNumber),
             errorMessage = document.querySelector('.error-message');
 
         if(filledFull){
             //Add fields values to the array & localstorage
-            let obj = new jsonStructure(firstName.value,lastName.value,phone.value,email.value,note.value);
+            let obj = new jsonStructure(firstName.value,lastName.value,countryCode.value,phone.value,email.value,note.value);
             phoneBook.push(obj);
             localStorage['phonebook'] = JSON.stringify(phoneBook);
             //Hide the form
@@ -108,7 +109,8 @@ window.onload = function(){
             let details = { 'details' : [
                 { 'name' : phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
                     'email' : phoneBook[index].email,
-                    'phone' : phoneBook[index].phone,
+                    'phone' : phoneBook[index].countryCode + phoneBook[index].phone,
+                    // 'phone' : phoneBook[index].phone,
                     'note' : phoneBook[index].note
                 }
             ] };
@@ -145,10 +147,12 @@ window.onload = function(){
 
         editContainer.innerHTML += html;
 
-        let editPhone = document.getElementById('edit-phone'),
+        let editCode = document.getElementById('edit-code'),
+            editPhone = document.getElementById('edit-phone'),
             editEmail = document.getElementById('edit-email'),
             editNote = document.getElementById('edit-note');
 
+        editCode.value = phoneBook[item].countryCode;
         editPhone.value = phoneBook[item].phone;
         editEmail.value = phoneBook[item].email;
         editNote.value = phoneBook[item].note;
@@ -163,6 +167,9 @@ window.onload = function(){
         });
 
         //rewrite values
+        editCode.addEventListener('input', function() {
+            phoneBook[item].countryCode = editPhone.value;
+        });
         editPhone.addEventListener('input', function() {
             phoneBook[item].phone = editPhone.value;
         });
@@ -228,7 +235,8 @@ window.onload = function(){
                 let shows = { 'shows' : [
                     { 'name' : phoneBook[n].firstName + ' ' + phoneBook[n].lastName,
                         'email' : phoneBook[n].email,
-                        'phone' : phoneBook[n].phone,
+                        'phone' : phoneBook[n].countryCode + phoneBook[n].phone,
+                        // 'phone' : phoneBook[n].phone,
                         'dataId' : 'data-id',
                         'id' : n
                     }
@@ -274,7 +282,7 @@ window.onload = function(){
         }
     }
 
-    filterInput.addEventListener('onkeyup', function () {
+    filterInput.addEventListener('keyup', function () {
         filter();
     });
 
