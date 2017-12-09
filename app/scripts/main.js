@@ -6,7 +6,8 @@ window.onload = function(){
         addFormPanel = document.querySelector('.add-panel'),
         exportBtn = document.getElementById('export'),
         importBtn = document.getElementById('import'),
-        filterInput = document.getElementById('filter');
+        filterInput = document.getElementById('filter'),
+        countriesCount = document.getElementById('countries');
 
     //Form Fields
     let firstName = document.getElementById('first-name'),
@@ -20,7 +21,8 @@ window.onload = function(){
     let contactsList = document.getElementById('contacts-list');
 
     //Create Storage Array
-    let phoneBook = [];
+    let phoneBook = [],
+        countryCodeBase = [];
 
     //Event Listeners
     addContactButton.addEventListener('click', function() {
@@ -38,6 +40,7 @@ window.onload = function(){
     contactsList.addEventListener('click', showContactDetails);
     contactsList.addEventListener('click', removeItem);
     contactsList.addEventListener('click', editItem);
+    countriesCount.addEventListener('click', countries);
 
     function jsonStructure(firstName, lastName, countryCode, phone, email, note){
         this.firstName = firstName;
@@ -168,7 +171,7 @@ window.onload = function(){
 
         //rewrite values
         editCode.addEventListener('input', function() {
-            phoneBook[item].countryCode = editPhone.value;
+            phoneBook[item].countryCode = editCode.value;
         });
         editPhone.addEventListener('input', function() {
             phoneBook[item].phone = editPhone.value;
@@ -293,4 +296,77 @@ window.onload = function(){
     exportBtn.addEventListener('click', download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain'));
 
     showContacts();
+/////////////////////////////////////////////////////////////
+    function countries() {
+        if(localStorage['codeBase'] === undefined){
+            let loadBasePanel = document.querySelector('.load-base');
+
+            loadBasePanel.style.display = 'block';
+
+        }
+    }
+
+    function uploadCodeBase(){
+        let uploadInput = document.getElementById('upload-code-base'),
+            fileToLoad = uploadInput.files[0];
+
+        let fileReader = new FileReader();
+        fileReader.readAsText(fileToLoad, "UTF-8");
+
+        fileReader.onload = function(fileLoadedEvent) {
+            let textFromFileLoaded = fileLoadedEvent.target.result,
+                textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
+            uploadInput.value = '';
+
+            countryCodeBase = textFromFileLoadedJson;
+
+
+            let codesOfPhoneBook = [];
+            for (let i = 0; i < phoneBook.length; i++) {
+                codesOfPhoneBook.push(phoneBook[i].countryCode);
+            }
+
+            // for(let n in phoneBook) {
+            //     console.log(phoneBook[n].firstName);
+            // }
+
+
+            // console.log(phoneBook);
+            // console.log(countryCodeBase);
+
+
+
+            // count
+            codesOfPhoneBook.sort();
+            let current = null;
+            let cnt = 0;
+            for (let i = 0; i < codesOfPhoneBook.length; i++) {
+                if (codesOfPhoneBook[i] != current) {
+                    if (cnt > 0) {
+                        console.log(current +' ' + cnt);
+                    }
+                    current = codesOfPhoneBook[i];
+                    cnt = 1;
+
+                    for(let k in countryCodeBase) {
+                        let code = countryCodeBase[k].countryCode.slice(1).replace(/\s/g, '');
+                        if (current === code) {
+                            current = countryCodeBase[k].name;
+                        }
+                    }
+
+                } else {
+                    cnt++;
+                }
+            }
+            if (cnt > 0) {
+                console.log(current + ' ' + cnt);
+            }
+        }
+    }
+
+    document.getElementById('upload-base-btn').addEventListener('click', function () {
+        uploadCodeBase();
+    });
+
 };
