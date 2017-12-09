@@ -22,7 +22,8 @@ window.onload = function(){
 
     //Create Storage Array
     let phoneBook = [],
-        countryCodeBase = [];
+        countryCodeBase = [],
+        codesOfPhoneBook = [];
 
     //Event Listeners
     addContactButton.addEventListener('click', function() {
@@ -239,7 +240,6 @@ window.onload = function(){
                     { 'name' : phoneBook[n].firstName + ' ' + phoneBook[n].lastName,
                         'email' : phoneBook[n].email,
                         'phone' : phoneBook[n].countryCode + phoneBook[n].phone,
-                        // 'phone' : phoneBook[n].phone,
                         'dataId' : 'data-id',
                         'id' : n
                     }
@@ -250,23 +250,6 @@ window.onload = function(){
                 contactsList.classList.remove('hidden');
             }
         }
-    }
-
-    function loadFileAsText(){
-        let uploadInput = document.getElementById('upload'),
-            fileToLoad = uploadInput.files[0];
-
-        let fileReader = new FileReader();
-        fileReader.readAsText(fileToLoad, "UTF-8");
-
-        fileReader.onload = function(fileLoadedEvent){
-            let textFromFileLoaded = fileLoadedEvent.target.result,
-                textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
-            localStorage['phonebook'] = JSON.stringify((phoneBook.concat(textFromFileLoadedJson)));
-            uploadInput.value = '';
-
-            showContacts();
-        };
     }
 
     function filter() {
@@ -289,13 +272,36 @@ window.onload = function(){
         filter();
     });
 
+    showContacts();
+
+    //uploading files
+    let uploadInput,
+        fileToLoad,
+        textFromFileLoaded,
+        textFromFileLoadedJson;
+
+    function loadFileAsText(){
+        uploadInput = document.getElementById('upload');
+        fileToLoad = uploadInput.files[0];
+        let fileReader = new FileReader();
+        fileReader.readAsText(fileToLoad, "UTF-8");
+
+        fileReader.onload = function(fileLoadedEvent){
+            textFromFileLoaded = fileLoadedEvent.target.result;
+            textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
+            localStorage['phonebook'] = JSON.stringify((phoneBook.concat(textFromFileLoadedJson)));
+            uploadInput.value = '';
+
+            showContacts();
+        };
+    }
+
     importBtn.addEventListener('click', function () {
         loadFileAsText();
     });
 
     exportBtn.addEventListener('click', download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain'));
 
-    showContacts();
 /////////////////////////////////////////////////////////////
     function countries() {
         if(localStorage['codeBase'] === undefined){
@@ -303,70 +309,62 @@ window.onload = function(){
 
             loadBasePanel.style.display = 'block';
 
-        }
-    }
+            function uploadCodeBase() {
+                uploadInput = document.getElementById('upload-code-base');
+                fileToLoad = uploadInput.files[0];
+                let fileReader = new FileReader();
+                fileReader.readAsText(fileToLoad, "UTF-8");
+                fileReader.onload = function(fileLoadedEvent) {
+                    let textFromFileLoaded = fileLoadedEvent.target.result,
+                        textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
+                    uploadInput.value = '';
 
-    function uploadCodeBase(){
-        let uploadInput = document.getElementById('upload-code-base'),
-            fileToLoad = uploadInput.files[0];
+                    countryCodeBase = textFromFileLoadedJson;
+                    localStorage['codeBase'] = JSON.stringify(countryCodeBase);
+                }
+            }
 
-        let fileReader = new FileReader();
-        fileReader.readAsText(fileToLoad, "UTF-8");
+            document.getElementById('upload-base-btn').addEventListener('click', function () {
+                uploadCodeBase();
+            });
+        } else {
+            let one,
+                two;
 
-        fileReader.onload = function(fileLoadedEvent) {
-            let textFromFileLoaded = fileLoadedEvent.target.result,
-                textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
-            uploadInput.value = '';
+            countryCodeBase = JSON.parse(localStorage['codeBase']);
 
-            countryCodeBase = textFromFileLoadedJson;
-
-
-            let codesOfPhoneBook = [];
             for (let i = 0; i < phoneBook.length; i++) {
                 codesOfPhoneBook.push(phoneBook[i].countryCode);
             }
 
-            // for(let n in phoneBook) {
-            //     console.log(phoneBook[n].firstName);
-            // }
-
-
-            // console.log(phoneBook);
-            // console.log(countryCodeBase);
-
-
-
-            // count
-            codesOfPhoneBook.sort();
-            let current = null;
-            let cnt = 0;
-            for (let i = 0; i < codesOfPhoneBook.length; i++) {
-                if (codesOfPhoneBook[i] != current) {
-                    if (cnt > 0) {
-                        console.log(current +' ' + cnt);
+            let counts = {},
+                countries;
+            codesOfPhoneBook.forEach(function(x) {
+                for(let k in countryCodeBase) {
+                    let code = countryCodeBase[k].countryCode.slice(1).replace(/\s/g, '');
+                    if (x === code) {
+                        x = countryCodeBase[k].name;
                     }
-                    current = codesOfPhoneBook[i];
-                    cnt = 1;
-
-                    for(let k in countryCodeBase) {
-                        let code = countryCodeBase[k].countryCode.slice(1).replace(/\s/g, '');
-                        if (current === code) {
-                            current = countryCodeBase[k].name;
-                        }
-                    }
-
-                } else {
-                    cnt++;
                 }
-            }
-            if (cnt > 0) {
-                console.log(current + ' ' + cnt);
+                counts[x] = (counts[x] || 0) + 1;
+            });
+
+            let targetContainer = document.getElementById('countries-count'),
+                template = document.getElementById('countriesCount').innerHTML;
+
+            targetContainer.innerHTML = '';
+            document.getElementById('countries-count-panel').classList.add('shown');
+
+            for (let key in counts) {
+                let countriesCount = { 'countriesCount' : [
+                        { 'country' : key,
+                            'count' : counts[key]
+                        }
+                    ] };
+
+                let html = Mustache.render(template, countriesCount);
+                targetContainer.innerHTML += html;
             }
         }
     }
-
-    document.getElementById('upload-base-btn').addEventListener('click', function () {
-        uploadCodeBase();
-    });
-
 };

@@ -108,12 +108,30 @@
         </script>
         <div id="edit-contact-panel" class="contacts-list_item_edit"></div>
 
+        <!--country count-->
+        <script id="countriesCount" type="text/template">
+            <table>
+                <tr>
+                    {{#countriesCount}}
+                        <td>{{country}}</td>
+                        <td>{{count}}</td>
+                    {{/countriesCount}}
+                </tr>
+            </table>
+        </script>
+        <div id="countries-count-panel" class="countries-count-panel">
+            <h1>Countries</h1>
+            <div id="countries-count"></div>
+        </div>
+
+        <!--upload code base panel-->
         <div class="load-base">
             Please upload countries codes base
             <input id="upload-code-base" type="file" name="upload-code-base">
             <button id="upload-base-btn">Upload Code Base</button>
         </div>
 
+        <!--phone book export and import-->
         <a href="" id="export">Export</a>
         <input id="upload" type="file" name="file-upload">
         <button id="import">Import</button>
