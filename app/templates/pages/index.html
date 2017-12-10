@@ -20,6 +20,15 @@
         <div class="filter-wrap">
             <input id="filter" type="text" placeholder="Filter" name="filter" class="name-filter" >
         </div>
+        <!--phone book export and import-->
+        <div class="export-import-btns">
+            <a href="" id="export" class="button">Export</a>
+            <div class="file-upload">
+                <label for="upload" class="upload-label"><i class="fa fa-upload" aria-hidden="true"></i></label>
+                <input id="upload" type="file" name="file-upload">
+                <button type="button" id="import">Import</button>
+            </div>
+        </div>
 
         <script id="contactsListItem" type="text/template">
             {{#shows}}
@@ -39,7 +48,7 @@
 
         <div class="buttons">
             <button id="countries">Countries</button>
-            <button id="add-contact">Add New</button>
+            <button id="add-contact" class="add-new"><span>Add New</span></button>
         </div>
 
         <div class="add-panel">
@@ -110,31 +119,26 @@
 
         <!--country count-->
         <script id="countriesCount" type="text/template">
-            <table>
-                <tr>
-                    {{#countriesCount}}
-                        <td>{{country}}</td>
-                        <td>{{count}}</td>
-                    {{/countriesCount}}
-                </tr>
-            </table>
+            {{#countriesCount}}
+                <div class="country-row">
+                    {{country}}: {{count}}
+                </div>
+            {{/countriesCount}}
         </script>
-        <div id="countries-count-panel" class="countries-count-panel">
+        <div id="countries-count-panel" class="countries-panel">
             <h1>Countries</h1>
             <div id="countries-count"></div>
         </div>
 
         <!--upload code base panel-->
-        <div class="load-base">
-            Please upload countries codes base
-            <input id="upload-code-base" type="file" name="upload-code-base">
-            <button id="upload-base-btn">Upload Code Base</button>
+        <div class="load-base-panel">
+            <p>Please upload countries codes base</p>
+            <div class="file-upload">
+                <label for="upload-code-base" class="upload-label"><i class="fa fa-upload" aria-hidden="true"></i></label>
+                <input id="upload-code-base" type="file" name="upload-code-base">
+                <button type="button" id="upload-base-btn">Upload Code Base</button>
+            </div>
         </div>
-
-        <!--phone book export and import-->
-        <a href="" id="export">Export</a>
-        <input id="upload" type="file" name="file-upload">
-        <button id="import">Import</button>
     </div>
 </body>
 </html>

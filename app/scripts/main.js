@@ -275,23 +275,31 @@ window.onload = function(){
     showContacts();
 
     //uploading files
-    let uploadInput,
-        fileToLoad,
+    let fileToLoad,
         textFromFileLoaded,
-        textFromFileLoadedJson;
+        textFromFileLoadedJson,
+        uploadInput = document.getElementById('upload');
+
+    importBtn.disabled = true;
+
+    uploadInput.addEventListener('change', function () {
+        if(uploadInput.value != '') {
+            importBtn.removeAttribute('disabled');
+        }
+    });
+
 
     function loadFileAsText(){
-        uploadInput = document.getElementById('upload');
         fileToLoad = uploadInput.files[0];
         let fileReader = new FileReader();
-        fileReader.readAsText(fileToLoad, "UTF-8");
+        fileReader.readAsText(fileToLoad, 'UTF-8');
 
         fileReader.onload = function(fileLoadedEvent){
             textFromFileLoaded = fileLoadedEvent.target.result;
             textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
             localStorage['phonebook'] = JSON.stringify((phoneBook.concat(textFromFileLoadedJson)));
             uploadInput.value = '';
-
+            importBtn.disabled = true;
             showContacts();
         };
     }
@@ -303,9 +311,45 @@ window.onload = function(){
     exportBtn.addEventListener('click', download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain'));
 
 /////////////////////////////////////////////////////////////
+    let showCountries = function() {
+        countryCodeBase = JSON.parse(localStorage['codeBase']);
+
+        for (let i = 0; i < phoneBook.length; i++) {
+            codesOfPhoneBook.push(phoneBook[i].countryCode);
+        }
+
+        let counts = {};
+        codesOfPhoneBook.forEach(function(x) {
+            for(let k in countryCodeBase) {
+                let code = countryCodeBase[k].countryCode.slice(1).replace(/\s/g, '');
+                if (x === code) {
+                    x = countryCodeBase[k].name;
+                }
+            }
+            counts[x] = (counts[x] || 0) + 1;
+        });
+
+        let targetContainer = document.getElementById('countries-count'),
+            template = document.getElementById('countriesCount').innerHTML;
+
+        targetContainer.innerHTML = '';
+        document.getElementById('countries-count-panel').classList.add('shown');
+
+        for (let key in counts) {
+            let countriesCount = { 'countriesCount' : [
+                    { 'country' : key,
+                        'count' : counts[key]
+                    }
+                ] };
+
+            let html = Mustache.render(template, countriesCount);
+            targetContainer.innerHTML += html;
+        }
+    };
+
     function countries() {
         if(localStorage['codeBase'] === undefined){
-            let loadBasePanel = document.querySelector('.load-base');
+            let loadBasePanel = document.querySelector('.load-base-panel');
 
             loadBasePanel.style.display = 'block';
 
@@ -324,47 +368,13 @@ window.onload = function(){
                 }
             }
 
-            document.getElementById('upload-base-btn').addEventListener('click', function () {
+            document.getElementById('upload-base-btn').addEventListener('click', function() {
                 uploadCodeBase();
             });
         } else {
-            let one,
-                two;
-
-            countryCodeBase = JSON.parse(localStorage['codeBase']);
-
-            for (let i = 0; i < phoneBook.length; i++) {
-                codesOfPhoneBook.push(phoneBook[i].countryCode);
-            }
-
-            let counts = {},
-                countries;
-            codesOfPhoneBook.forEach(function(x) {
-                for(let k in countryCodeBase) {
-                    let code = countryCodeBase[k].countryCode.slice(1).replace(/\s/g, '');
-                    if (x === code) {
-                        x = countryCodeBase[k].name;
-                    }
-                }
-                counts[x] = (counts[x] || 0) + 1;
-            });
-
-            let targetContainer = document.getElementById('countries-count'),
-                template = document.getElementById('countriesCount').innerHTML;
-
-            targetContainer.innerHTML = '';
-            document.getElementById('countries-count-panel').classList.add('shown');
-
-            for (let key in counts) {
-                let countriesCount = { 'countriesCount' : [
-                        { 'country' : key,
-                            'count' : counts[key]
-                        }
-                    ] };
-
-                let html = Mustache.render(template, countriesCount);
-                targetContainer.innerHTML += html;
-            }
+            showCountries();
         }
     }
+
+    localStorage.removeItem('codeBase');
 };
