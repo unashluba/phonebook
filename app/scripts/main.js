@@ -7,7 +7,10 @@ window.onload = function(){
         exportBtn = document.getElementById('export'),
         importBtn = document.getElementById('import'),
         filterInput = document.getElementById('filter'),
-        countriesCount = document.getElementById('countries');
+        countriesCount = document.getElementById('countries'),
+        uploadBaseBtn = document.getElementById('upload-base-btn'),
+        seeCountriesBtn = document.getElementById('see-countries-btn'),
+        back = document.getElementById('back-to-contacts');
 
     //Form Fields
     let firstName = document.getElementById('first-name'),
@@ -17,8 +20,10 @@ window.onload = function(){
         email = document.getElementById('email'),
         note = document.getElementById('note');
 
-    //Phone Book Display (Book Items)
-    let contactsList = document.getElementById('contacts-list');
+    //DOM Elements
+    let contactsList = document.getElementById('contacts-list'),
+        loadBasePanel = document.querySelector('.load-base-panel'),
+        successfulUploadBlock = document.querySelector('.successful-upload-block');
 
     //Create Storage Array
     let phoneBook = [],
@@ -37,7 +42,6 @@ window.onload = function(){
     });
 
     addButton.addEventListener('click', addToBook);
-
     contactsList.addEventListener('click', showContactDetails);
     contactsList.addEventListener('click', removeItem);
     contactsList.addEventListener('click', editItem);
@@ -59,7 +63,9 @@ window.onload = function(){
         exportBtn.download = name;
     }
 
+    //add to phone book
     function addToBook(){
+        //TODO validation for email
         let phoneNumber = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/,
             filledFull = firstName.value!=='' && lastName.value!=='' && countryCode.value!=='' && phone.value!=='' && phone.value.match(phoneNumber),
             errorMessage = document.querySelector('.error-message');
@@ -69,15 +75,11 @@ window.onload = function(){
             let obj = new jsonStructure(firstName.value,lastName.value,countryCode.value,phone.value,email.value,note.value);
             phoneBook.push(obj);
             localStorage['phonebook'] = JSON.stringify(phoneBook);
-            //Hide the form
             addFormPanel.style.display = 'none';
-            //Hide error message
             errorMessage.style.display = 'none';
             //write to file
             download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain');
-            //Updating and displaying all records in the phone book
             showContacts();
-            //Clear the form
             clearForm();
         }
         else {
@@ -92,10 +94,8 @@ window.onload = function(){
             buttons = target.classList.contains('delete-btn') || target.classList.contains('edit-btn');
 
         if (!buttons) {
-            // цикл двигается вверх от target к родителям до contacts-list_item
             while (target !== this) {
                 if (target.className == 'contacts-list_item') {
-                    // нашли элемент, который нас интересует!
                     details(target);
                     return;
                 }
@@ -114,7 +114,6 @@ window.onload = function(){
                 { 'name' : phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
                     'email' : phoneBook[index].email,
                     'phone' : phoneBook[index].countryCode + phoneBook[index].phone,
-                    // 'phone' : phoneBook[index].phone,
                     'note' : phoneBook[index].note
                 }
             ] };
@@ -127,13 +126,13 @@ window.onload = function(){
             let cancelView = document.getElementById('cancel-view'),
                 showEditFieldsBtn = document.getElementById('show-edit-fields');
 
-            cancelView.onclick = function() {
+            cancelView.addEventListener('click', function() {
                 detailsContainer.classList.remove('shown');
-            };
+            });
 
-            showEditFieldsBtn.onclick = function() {
+            showEditFieldsBtn.addEventListener('click', function() {
                 edit(index);
-            };
+            });
         }
     }
 
@@ -186,7 +185,6 @@ window.onload = function(){
 
         updateContactBtn.addEventListener('click', function () {
             localStorage['phonebook'] = JSON.stringify(phoneBook);
-            //write to file
             download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain');
             showContacts();
             editContainer.classList.remove('shown');
@@ -223,8 +221,6 @@ window.onload = function(){
     }
 
     function showContacts(){
-        //Check if the key 'phonebook' exists in localstorage or else create it
-        //If it exists, load contents from the localstorage and loop > display it on the page
         if(localStorage['phonebook'] === undefined){
             localStorage['phonebook'] = '[]';
         } else {
@@ -272,22 +268,30 @@ window.onload = function(){
         filter();
     });
 
-    showContacts();
-
     //uploading files
     let fileToLoad,
         textFromFileLoaded,
         textFromFileLoadedJson,
         uploadInput = document.getElementById('upload');
 
-    importBtn.disabled = true;
+    //upload code base
+    function firstCodeBaseUpload() {
+        let uploadBaseInput = document.getElementById('upload-code-base');
+        uploadBaseBtn.disabled = true;
 
+        uploadBaseInput.addEventListener('change', function () {
+            if(uploadBaseInput.value != '') {
+                uploadBaseBtn.removeAttribute('disabled');
+            }
+        });
+    }
+
+    importBtn.disabled = true;
     uploadInput.addEventListener('change', function () {
         if(uploadInput.value != '') {
             importBtn.removeAttribute('disabled');
         }
     });
-
 
     function loadFileAsText(){
         fileToLoad = uploadInput.files[0];
@@ -310,8 +314,7 @@ window.onload = function(){
 
     exportBtn.addEventListener('click', download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain'));
 
-/////////////////////////////////////////////////////////////
-    let showCountries = function() {
+    function showCountries() {
         countryCodeBase = JSON.parse(localStorage['codeBase']);
 
         for (let i = 0; i < phoneBook.length; i++) {
@@ -345,19 +348,20 @@ window.onload = function(){
             let html = Mustache.render(template, countriesCount);
             targetContainer.innerHTML += html;
         }
-    };
+    }
 
     function countries() {
         if(localStorage['codeBase'] === undefined){
-            let loadBasePanel = document.querySelector('.load-base-panel');
 
             loadBasePanel.style.display = 'block';
+
+            firstCodeBaseUpload();
 
             function uploadCodeBase() {
                 uploadInput = document.getElementById('upload-code-base');
                 fileToLoad = uploadInput.files[0];
                 let fileReader = new FileReader();
-                fileReader.readAsText(fileToLoad, "UTF-8");
+                fileReader.readAsText(fileToLoad, 'UTF-8');
                 fileReader.onload = function(fileLoadedEvent) {
                     let textFromFileLoaded = fileLoadedEvent.target.result,
                         textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
@@ -368,13 +372,25 @@ window.onload = function(){
                 }
             }
 
-            document.getElementById('upload-base-btn').addEventListener('click', function() {
+            uploadBaseBtn.addEventListener('click', function() {
                 uploadCodeBase();
+
+
+                successfulUploadBlock.style.display = 'block';
             });
         } else {
             showCountries();
         }
     }
 
-    localStorage.removeItem('codeBase');
+    seeCountriesBtn.addEventListener('click', function() {
+        showCountries();
+    });
+
+    back.addEventListener('click', function() {
+        document.getElementById('countries-count-panel').classList.remove('shown');
+        loadBasePanel.style.display = 'none';
+    });
+
+    showContacts();
 };

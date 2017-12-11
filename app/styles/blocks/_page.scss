@@ -51,6 +51,7 @@ a {
     display: block;
     height: 70vh;
     overflow-y: scroll;
+    overflow-x: hidden;
 
     &.hidden {
       display: none;
@@ -175,6 +176,10 @@ a {
   .countries-panel,
   .load-base-panel {
     @include standard-panel;
+  }
+
+  .countries-panel {
+    z-index: 3;
   }
 
   .country-row {
@@ -330,5 +335,13 @@ a {
 
   .plus {
     width: 2%;
+  }
+
+  .successful-upload-block {
+    display: none;
+
+    p {
+      text-align: left;
+    }
   }
 }

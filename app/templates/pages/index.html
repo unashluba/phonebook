@@ -128,15 +128,24 @@
         <div id="countries-count-panel" class="countries-panel">
             <h1>Countries</h1>
             <div id="countries-count"></div>
+            <div class="buttons">
+                <button type="button" id="back-to-contacts">Contacts</button>
+            </div>
         </div>
 
         <!--upload code base panel-->
         <div class="load-base-panel">
-            <p>Please upload countries codes base</p>
+            <p>Please upload country codes base</p>
             <div class="file-upload">
                 <label for="upload-code-base" class="upload-label"><i class="fa fa-upload" aria-hidden="true"></i></label>
                 <input id="upload-code-base" type="file" name="upload-code-base">
                 <button type="button" id="upload-base-btn">Upload Code Base</button>
+
+                <!--after upload code base panel-->
+                <div class="successful-upload-block">
+                    <p>Thank you! Country codes base was successfully uploaded</p>
+                    <button type="button" id="see-countries-btn">Countries</button>
+                </div>
             </div>
         </div>
     </div>
