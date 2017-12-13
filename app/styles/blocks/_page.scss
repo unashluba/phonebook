@@ -200,7 +200,6 @@ a {
     left: 15px;
     right: 15px;
 
-
     &:after {
       @include after;
     }
@@ -325,6 +324,7 @@ a {
         width: 100%;
         border: none;
         margin-bottom: 30px;
+        padding: 5px 10px;
       }
 
       .error-message {

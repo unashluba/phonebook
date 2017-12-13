@@ -1,4 +1,8 @@
-window.onload = function(){
+window.onload = function () {
+    let fileToLoad,
+        textFromFileLoaded,
+        textFromFileLoadedJson;
+
     //Buttons
     let addContactButton = document.getElementById('add-contact'),
         addButton = document.getElementById('add'),
@@ -23,31 +27,60 @@ window.onload = function(){
     //DOM Elements
     let contactsList = document.getElementById('contacts-list'),
         loadBasePanel = document.querySelector('.load-base-panel'),
-        successfulUploadBlock = document.querySelector('.successful-upload-block');
+        successfulUploadBlock = document.querySelector('.successful-upload-block'),
+        uploadInput = document.getElementById('upload');
 
-    //Create Storage Array
+    //Arrays
     let phoneBook = [],
         countryCodeBase = [],
         codesOfPhoneBook = [];
 
     //Event Listeners
-    addContactButton.addEventListener('click', function() {
-        addFormPanel.style.display = 'block';
-        contactsList.className += ' hidden';
-    });
-
-    cancelAdding.addEventListener('click', function() {
-        addFormPanel.style.display = 'none';
-        contactsList.classList.remove('hidden');
-    });
-
     addButton.addEventListener('click', addToBook);
     contactsList.addEventListener('click', showContactDetails);
     contactsList.addEventListener('click', removeItem);
     contactsList.addEventListener('click', editItem);
     countriesCount.addEventListener('click', countries);
 
-    function jsonStructure(firstName, lastName, countryCode, phone, email, note){
+    back.addEventListener('click', function () {
+        document.getElementById('countries-count-panel').classList.remove('shown');
+        loadBasePanel.style.display = 'none';
+    });
+
+    addContactButton.addEventListener('click', function () {
+        addFormPanel.style.display = 'block';
+        contactsList.className += ' hidden';
+    });
+
+    cancelAdding.addEventListener('click', function () {
+        addFormPanel.style.display = 'none';
+        contactsList.classList.remove('hidden');
+    });
+
+    importBtn.disabled = true;
+    uploadInput.addEventListener('change', function () {
+        if (uploadInput.value != '') {
+            importBtn.removeAttribute('disabled');
+        }
+    });
+
+    importBtn.addEventListener('click', function () {
+        loadFileAsText();
+    });
+
+    exportBtn.addEventListener('click', function () {
+        download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain');
+    });
+
+    filterInput.addEventListener('keyup', function () {
+        filter();
+    });
+
+    seeCountriesBtn.addEventListener('click', function () {
+        showCountries();
+    });
+
+    function jsonStructure(firstName, lastName, countryCode, phone, email, note) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.countryCode = countryCode;
@@ -63,16 +96,15 @@ window.onload = function(){
         exportBtn.download = name;
     }
 
-    //add to phone book
-    function addToBook(){
+    function addToBook() {
         //TODO validation for email
         let phoneNumber = /^[\s()+-]*([0-9][\s()+-]*){6,20}$/,
-            filledFull = firstName.value!=='' && lastName.value!=='' && countryCode.value!=='' && phone.value!=='' && phone.value.match(phoneNumber),
+            filledFull = firstName.value !== '' && lastName.value !== '' && countryCode.value !== '' && phone.value !== '' && phone.value.match(phoneNumber),
             errorMessage = document.querySelector('.error-message');
 
-        if(filledFull){
+        if (filledFull) {
             //Add fields values to the array & localstorage
-            let obj = new jsonStructure(firstName.value,lastName.value,countryCode.value,phone.value,email.value,note.value);
+            let obj = new jsonStructure(firstName.value, lastName.value, countryCode.value, phone.value, email.value, note.value);
             phoneBook.push(obj);
             localStorage['phonebook'] = JSON.stringify(phoneBook);
             addFormPanel.style.display = 'none';
@@ -110,13 +142,16 @@ window.onload = function(){
 
             detailsContainer.innerHTML = '';
 
-            let details = { 'details' : [
-                { 'name' : phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
-                    'email' : phoneBook[index].email,
-                    'phone' : phoneBook[index].countryCode + phoneBook[index].phone,
-                    'note' : phoneBook[index].note
-                }
-            ] };
+            let details = {
+                'details': [
+                    {
+                        'name': phoneBook[index].firstName + ' ' + phoneBook[index].lastName,
+                        'email': phoneBook[index].email,
+                        'phone': phoneBook[index].countryCode + phoneBook[index].phone,
+                        'note': phoneBook[index].note
+                    }
+                ]
+            };
 
             let html = Mustache.render(template, details);
 
@@ -126,11 +161,11 @@ window.onload = function(){
             let cancelView = document.getElementById('cancel-view'),
                 showEditFieldsBtn = document.getElementById('show-edit-fields');
 
-            cancelView.addEventListener('click', function() {
+            cancelView.addEventListener('click', function () {
                 detailsContainer.classList.remove('shown');
             });
 
-            showEditFieldsBtn.addEventListener('click', function() {
+            showEditFieldsBtn.addEventListener('click', function () {
                 edit(index);
             });
         }
@@ -140,11 +175,13 @@ window.onload = function(){
         let editContainer = document.getElementById('edit-contact-panel'),
             editTemplate = document.getElementById('editContact').innerHTML;
 
-            editContainer.innerHTML = '';
+        editContainer.innerHTML = '';
 
-        let edit = { 'edit' : [
-            { 'name' : phoneBook[item].firstName + ' ' + phoneBook[item].lastName}
-        ] };
+        let edit = {
+            'edit': [
+                {'name': phoneBook[item].firstName + ' ' + phoneBook[item].lastName}
+            ]
+        };
 
         let html = Mustache.render(editTemplate, edit);
 
@@ -170,16 +207,16 @@ window.onload = function(){
         });
 
         //rewrite values
-        editCode.addEventListener('input', function() {
+        editCode.addEventListener('input', function () {
             phoneBook[item].countryCode = editCode.value;
         });
-        editPhone.addEventListener('input', function() {
+        editPhone.addEventListener('input', function () {
             phoneBook[item].phone = editPhone.value;
         });
-        editEmail.addEventListener('input', function() {
+        editEmail.addEventListener('input', function () {
             phoneBook[item].email = editEmail.value;
         });
-        editNote.addEventListener('input', function() {
+        editNote.addEventListener('input', function () {
             phoneBook[item].note = editNote.value;
         });
 
@@ -192,7 +229,7 @@ window.onload = function(){
     }
 
     function editItem(e) {
-        if(e.target.classList.contains('edit-btn')){
+        if (e.target.classList.contains('edit-btn')) {
             let editID = e.target.getAttribute('data-id');
 
             edit(editID);
@@ -200,10 +237,11 @@ window.onload = function(){
     }
 
     function removeItem(e) {
-        if(e.target.classList.contains('delete-btn')){
+        if (e.target.classList.contains('delete-btn')) {
             let removingID = e.target.getAttribute('data-id');
 
-            e.target.closest('.contacts-list_item').className +=  ' hiding';
+            //TODO chack closest support
+            e.target.closest('.contacts-list_item').className += ' hiding';
 
             // Remove the JSOn entry from the array with the index num = remID;
             phoneBook.splice(removingID, 1);
@@ -213,15 +251,15 @@ window.onload = function(){
         }
     }
 
-    function clearForm(){
+    function clearForm() {
         let formField = document.querySelectorAll('.form-field');
-        for(let i in formField){
+        for (let i in formField) {
             formField[i].value = '';
         }
     }
 
-    function showContacts(){
-        if(localStorage['phonebook'] === undefined){
+    function showContacts() {
+        if (localStorage['phonebook'] === undefined) {
             localStorage['phonebook'] = '[]';
         } else {
             phoneBook = JSON.parse(localStorage['phonebook']);
@@ -231,15 +269,18 @@ window.onload = function(){
 
             targetContainer.innerHTML = '';
 
-            for(let n in phoneBook){
-                let shows = { 'shows' : [
-                    { 'name' : phoneBook[n].firstName + ' ' + phoneBook[n].lastName,
-                        'email' : phoneBook[n].email,
-                        'phone' : phoneBook[n].countryCode + phoneBook[n].phone,
-                        'dataId' : 'data-id',
-                        'id' : n
-                    }
-                ] };
+            for (let n in phoneBook) {
+                let shows = {
+                    'shows': [
+                        {
+                            'name': phoneBook[n].firstName + ' ' + phoneBook[n].lastName,
+                            'email': phoneBook[n].email,
+                            'phone': phoneBook[n].countryCode + phoneBook[n].phone,
+                            'dataId': 'data-id',
+                            'id': n
+                        }
+                    ]
+                };
 
                 let html = Mustache.render(template, shows);
                 targetContainer.innerHTML += html;
@@ -264,41 +305,23 @@ window.onload = function(){
         }
     }
 
-    filterInput.addEventListener('keyup', function () {
-        filter();
-    });
-
-    //uploading files
-    let fileToLoad,
-        textFromFileLoaded,
-        textFromFileLoadedJson,
-        uploadInput = document.getElementById('upload');
-
-    //upload code base
     function firstCodeBaseUpload() {
         let uploadBaseInput = document.getElementById('upload-code-base');
         uploadBaseBtn.disabled = true;
 
         uploadBaseInput.addEventListener('change', function () {
-            if(uploadBaseInput.value != '') {
+            if (uploadBaseInput.value != '') {
                 uploadBaseBtn.removeAttribute('disabled');
             }
         });
     }
 
-    importBtn.disabled = true;
-    uploadInput.addEventListener('change', function () {
-        if(uploadInput.value != '') {
-            importBtn.removeAttribute('disabled');
-        }
-    });
-
-    function loadFileAsText(){
+    function loadFileAsText() {
         fileToLoad = uploadInput.files[0];
         let fileReader = new FileReader();
         fileReader.readAsText(fileToLoad, 'UTF-8');
 
-        fileReader.onload = function(fileLoadedEvent){
+        fileReader.onload = function (fileLoadedEvent) {
             textFromFileLoaded = fileLoadedEvent.target.result;
             textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
             localStorage['phonebook'] = JSON.stringify((phoneBook.concat(textFromFileLoadedJson)));
@@ -308,12 +331,6 @@ window.onload = function(){
         };
     }
 
-    importBtn.addEventListener('click', function () {
-        loadFileAsText();
-    });
-
-    exportBtn.addEventListener('click', download(JSON.stringify(phoneBook), 'phonebook.json', 'text/plain'));
-
     function showCountries() {
         countryCodeBase = JSON.parse(localStorage['codeBase']);
 
@@ -322,28 +339,32 @@ window.onload = function(){
         }
 
         let counts = {};
-        codesOfPhoneBook.forEach(function(x) {
-            for(let k in countryCodeBase) {
+        codesOfPhoneBook.forEach(function (e) {
+            for (let k in countryCodeBase) {
                 let code = countryCodeBase[k].countryCode.slice(1).replace(/\s/g, '');
-                if (x === code) {
-                    x = countryCodeBase[k].name;
+                if (e === code) {
+                    e = countryCodeBase[k].name;
                 }
             }
-            counts[x] = (counts[x] || 0) + 1;
+            counts[e] = (counts[e] || 0) + 1;
         });
 
         let targetContainer = document.getElementById('countries-count'),
             template = document.getElementById('countriesCount').innerHTML;
 
         targetContainer.innerHTML = '';
+
         document.getElementById('countries-count-panel').classList.add('shown');
 
         for (let key in counts) {
-            let countriesCount = { 'countriesCount' : [
-                    { 'country' : key,
-                        'count' : counts[key]
+            let countriesCount = {
+                'countriesCount': [
+                    {
+                        'country': key,
+                        'count': counts[key]
                     }
-                ] };
+                ]
+            };
 
             let html = Mustache.render(template, countriesCount);
             targetContainer.innerHTML += html;
@@ -351,7 +372,7 @@ window.onload = function(){
     }
 
     function countries() {
-        if(localStorage['codeBase'] === undefined){
+        if (localStorage['codeBase'] === undefined) {
 
             loadBasePanel.style.display = 'block';
 
@@ -362,7 +383,7 @@ window.onload = function(){
                 fileToLoad = uploadInput.files[0];
                 let fileReader = new FileReader();
                 fileReader.readAsText(fileToLoad, 'UTF-8');
-                fileReader.onload = function(fileLoadedEvent) {
+                fileReader.onload = function (fileLoadedEvent) {
                     let textFromFileLoaded = fileLoadedEvent.target.result,
                         textFromFileLoadedJson = JSON.parse(textFromFileLoaded);
                     uploadInput.value = '';
@@ -372,9 +393,8 @@ window.onload = function(){
                 }
             }
 
-            uploadBaseBtn.addEventListener('click', function() {
+            uploadBaseBtn.addEventListener('click', function () {
                 uploadCodeBase();
-
 
                 successfulUploadBlock.style.display = 'block';
             });
@@ -382,15 +402,6 @@ window.onload = function(){
             showCountries();
         }
     }
-
-    seeCountriesBtn.addEventListener('click', function() {
-        showCountries();
-    });
-
-    back.addEventListener('click', function() {
-        document.getElementById('countries-count-panel').classList.remove('shown');
-        loadBasePanel.style.display = 'none';
-    });
 
     showContacts();
 };
